@@ -1,89 +1,237 @@
-import logoDark from "./logo-dark.svg";
-import logoLight from "./logo-light.svg";
+import { useState, useEffect } from "react";
+
+const GREETINGS = [
+  { text: "Bonjour", lang: "French", color: "from-blue-500 to-indigo-600" },
+  { text: "Hello", lang: "English", color: "from-purple-500 to-pink-600" },
+  { text: "Hola", lang: "Spanish", color: "from-amber-500 to-orange-600" },
+  { text: "Ciao", lang: "Italian", color: "from-emerald-500 to-teal-600" },
+  { text: "Konnichiwa", lang: "Japanese", color: "from-rose-500 to-red-600" },
+  { text: "Namaste", lang: "Hindi", color: "from-cyan-500 to-blue-600" },
+];
 
 export function Welcome() {
+  const [greetingIndex, setGreetingIndex] = useState(0);
+  const [userName, setUserName] = useState("");
+  const [customGreeting, setCustomGreeting] = useState("");
+  const [celebrate, setCelebrate] = useState(false);
+
+  // Cycle through greetings every 2.5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setGreetingIndex((prev) => (prev + 1) % GREETINGS.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleGreetingSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (userName.trim()) {
+      const currentGreet = GREETINGS[greetingIndex].text;
+      setCustomGreeting(`${currentGreet}, ${userName.trim()} ! 👋`);
+      setCelebrate(true);
+      setTimeout(() => setCelebrate(false), 2000);
+    }
+  };
+
+  const currentGreeting = GREETINGS[greetingIndex];
+
   return (
-    <main className="flex items-center justify-center pt-16 pb-4">
-      <div className="flex-1 flex flex-col items-center gap-16 min-h-0">
-        <header className="flex flex-col items-center gap-9">
-          <div className="w-[500px] max-w-[100vw] p-4">
-            <img
-              src={logoLight}
-              alt="React Router"
-              className="block w-full dark:hidden"
-            />
-            <img
-              src={logoDark}
-              alt="React Router"
-              className="hidden w-full dark:block"
-            />
+    <div className="relative min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 overflow-hidden font-sans transition-colors duration-300">
+      {/* Decorative Glowing Gradients in Background */}
+      <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-500/20 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-pink-500/20 blur-[130px] pointer-events-none" />
+      <div className="absolute top-[30%] right-[20%] w-[400px] h-[400px] rounded-full bg-cyan-500/10 blur-[100px] pointer-events-none" />
+
+      {/* Header / Navbar */}
+      <header className="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-gray-950/70 border-b border-gray-200/50 dark:border-gray-800/50 transition-colors">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 animate-pulse">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="white"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z"
+                />
+              </svg>
+            </div>
+            <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
+              AuraApp
+            </span>
           </div>
-        </header>
-        <div className="max-w-[300px] w-full space-y-6 px-4">
-          <nav className="rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4">
-            <p className="leading-6 text-gray-700 dark:text-gray-200 text-center">
-              What&apos;s next?
-            </p>
-            <ul>
-              {resources.map(({ href, text, icon }) => (
-                <li key={href}>
-                  <a
-                    className="group flex items-center gap-3 self-stretch p-3 leading-normal text-blue-700 hover:underline dark:text-blue-500"
-                    href={href}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {icon}
-                    {text}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+
+          <div className="flex items-center gap-4">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              Live sur cPanel : Port 4000
+            </span>
+          </div>
         </div>
-      </div>
-    </main>
+      </header>
+
+      {/* Main Container */}
+      <main className="max-w-5xl mx-auto px-6 pt-12 pb-24 relative z-10 flex flex-col items-center">
+        {/* Hero Section */}
+        <section className="text-center max-w-3xl space-y-6 mt-8">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-gray-200/50 dark:bg-gray-800/50 border border-gray-300/30 dark:border-gray-700/30 text-sm font-medium tracking-wide text-gray-600 dark:text-gray-300">
+            ✨ Déploiement Production Réussi
+          </div>
+
+          <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none text-gray-900 dark:text-white">
+            Votre application dit <br />
+            <span
+              className={`inline-block mt-3 px-4 py-2 rounded-2xl bg-gradient-to-r ${currentGreeting.color} text-transparent bg-clip-text transition-all duration-700 transform hover:scale-105`}
+            >
+              {currentGreeting.text} !
+            </span>
+          </h1>
+
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 font-normal leading-relaxed max-w-2xl mx-auto">
+            Bienvenue sur votre serveur Remix / React Router personnalisé. Une
+            architecture moderne propulsée par Express, stylisée avec Tailwind CSS v4.
+          </p>
+        </section>
+
+        {/* Personalized Interactive Greeting Form */}
+        <section className="w-full max-w-md mt-12">
+          <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border border-gray-200/50 dark:border-gray-800/50 rounded-3xl p-8 shadow-xl shadow-gray-200/10 dark:shadow-black/30 relative">
+            {celebrate && (
+              <div className="absolute inset-0 bg-indigo-500/5 rounded-3xl pointer-events-none border-2 border-indigo-500/50 animate-pulse transition-all duration-300" />
+            )}
+
+            <h2 className="text-xl font-bold mb-4 text-center text-gray-800 dark:text-gray-100">
+              Dites-nous votre nom
+            </h2>
+
+            <form onSubmit={handleGreetingSubmit} className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Entrez votre prénom ou pseudo..."
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  maxLength={30}
+                  className="w-full px-5 py-3 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-950/50 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all duration-200 text-center text-lg font-semibold"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full py-3 px-6 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold text-lg shadow-lg shadow-indigo-500/25 hover:shadow-indigo-600/35 transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 cursor-pointer"
+              >
+                Générer la salutation
+              </button>
+            </form>
+
+            {/* Display greeting result */}
+            {customGreeting && (
+              <div className="mt-6 p-4 rounded-2xl bg-gray-100/50 dark:bg-gray-950/50 border border-gray-200/30 dark:border-gray-800/30 text-center animate-bounce">
+                <p className="text-xl font-extrabold bg-gradient-to-r from-indigo-400 to-pink-500 bg-clip-text text-transparent">
+                  {customGreeting}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Langue courante : {currentGreeting.lang}
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Feature Cards Grid */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl mt-20">
+          {/* Card 1 */}
+          <div className="group p-8 rounded-3xl bg-white/40 dark:bg-gray-900/40 backdrop-blur-md border border-gray-200/40 dark:border-gray-800/40 hover:border-indigo-500/30 dark:hover:border-indigo-500/30 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/5 hover:-translate-y-1">
+            <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-500 dark:text-indigo-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+              React Router v7
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+              Propulsé par Vite avec le support complet du SSR, du routing imbriqué,
+              et de la génération de types automatique.
+            </p>
+          </div>
+
+          {/* Card 2 */}
+          <div className="group p-8 rounded-3xl bg-white/40 dark:bg-gray-900/40 backdrop-blur-md border border-gray-200/40 dark:border-gray-800/40 hover:border-purple-500/30 dark:hover:border-purple-500/30 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/5 hover:-translate-y-1">
+            <div className="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-500 dark:text-purple-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5.25 14.25h13.5m-13.5 0a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3h13.5a3 3 0 0 1 3 3v3.75a3 3 0 0 1-3 3M5.25 14.25a3.001 3.001 0 0 0-3 2.122 3 3 0 0 0 5.659.878m11.841-3a3.001 3.001 0 0 1 3 2.122 3 3 0 0 1-5.659.878m-7.933-2.122A4.505 4.505 0 0 1 8.12 16.5h7.76a4.505 4.505 0 0 1-.61-2.25"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+              Express Custom Server
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+              Un serveur Node personnalisé idéal pour cPanel, fonctionnant sur le port
+              4000 avec gestion robuste des assets et du SSR.
+            </p>
+          </div>
+
+          {/* Card 3 */}
+          <div className="group p-8 rounded-3xl bg-white/40 dark:bg-gray-900/40 backdrop-blur-md border border-gray-200/40 dark:border-gray-800/40 hover:border-pink-500/30 dark:hover:border-pink-500/30 transition-all duration-300 hover:shadow-2xl hover:shadow-pink-500/5 hover:-translate-y-1">
+            <div className="w-12 h-12 rounded-2xl bg-pink-500/10 text-pink-500 dark:text-pink-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.01-3.02a5.972 5.972 0 0 0-.704 2.097M12.918 14.5a15.999 15.999 0 0 1 3.387 1.621m-5.01-3.02a5.974 5.974 0 0 1 .704 2.097m0 0a3 3 0 1 1-5.78 1.128 2.25 2.25 0 0 0-2.4 2.245 4.5 4.5 0 0 1 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.997 15.997 0 0 0 3.388-1.62m-5.01-3.02a5.973 5.973 0 0 0-.704 2.097M16.305 14.5a15.998 15.998 0 0 1 3.388 1.62m-5.01-3.02a5.973 5.973 0 0 1 .704 2.097m0 0a3 3 0 1 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+              Tailwind CSS v4
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+              Mise en page optimisée avec le tout dernier moteur de Tailwind CSS,
+              intégré via le compilateur ultrarapide de Vite.
+            </p>
+          </div>
+        </section>
+      </main>
+
+      {/* Subtle Footer */}
+      <footer className="absolute bottom-6 w-full text-center text-xs text-gray-400 dark:text-gray-600">
+        © 2026 AuraApp • Fait avec ❤️ pour cPanel et Express.
+      </footer>
+    </div>
   );
 }
-
-const resources = [
-  {
-    href: "https://reactrouter.com/docs",
-    text: "React Router Docs",
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="20"
-        viewBox="0 0 20 20"
-        fill="none"
-        className="stroke-gray-600 group-hover:stroke-current dark:stroke-gray-300"
-      >
-        <path
-          d="M9.99981 10.0751V9.99992M17.4688 17.4688C15.889 19.0485 11.2645 16.9853 7.13958 12.8604C3.01467 8.73546 0.951405 4.11091 2.53116 2.53116C4.11091 0.951405 8.73546 3.01467 12.8604 7.13958C16.9853 11.2645 19.0485 15.889 17.4688 17.4688ZM2.53132 17.4688C0.951566 15.8891 3.01483 11.2645 7.13974 7.13963C11.2647 3.01471 15.8892 0.951453 17.469 2.53121C19.0487 4.11096 16.9854 8.73551 12.8605 12.8604C8.73562 16.9853 4.11107 19.0486 2.53132 17.4688Z"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
-  },
-  {
-    href: "https://rmx.as/discord",
-    text: "Join Discord",
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="20"
-        viewBox="0 0 24 20"
-        fill="none"
-        className="stroke-gray-600 group-hover:stroke-current dark:stroke-gray-300"
-      >
-        <path
-          d="M15.0686 1.25995L14.5477 1.17423L14.2913 1.63578C14.1754 1.84439 14.0545 2.08275 13.9422 2.31963C12.6461 2.16488 11.3406 2.16505 10.0445 2.32014C9.92822 2.08178 9.80478 1.84975 9.67412 1.62413L9.41449 1.17584L8.90333 1.25995C7.33547 1.51794 5.80717 1.99419 4.37748 2.66939L4.19 2.75793L4.07461 2.93019C1.23864 7.16437 0.46302 11.3053 0.838165 15.3924L0.868838 15.7266L1.13844 15.9264C2.81818 17.1714 4.68053 18.1233 6.68582 18.719L7.18892 18.8684L7.50166 18.4469C7.96179 17.8268 8.36504 17.1824 8.709 16.4944L8.71099 16.4904C10.8645 17.0471 13.128 17.0485 15.2821 16.4947C15.6261 17.1826 16.0293 17.8269 16.4892 18.4469L16.805 18.8725L17.3116 18.717C19.3056 18.105 21.1876 17.1751 22.8559 15.9238L23.1224 15.724L23.1528 15.3923C23.5873 10.6524 22.3579 6.53306 19.8947 2.90714L19.7759 2.73227L19.5833 2.64518C18.1437 1.99439 16.6386 1.51826 15.0686 1.25995ZM16.6074 10.7755L16.6074 10.7756C16.5934 11.6409 16.0212 12.1444 15.4783 12.1444C14.9297 12.1444 14.3493 11.6173 14.3493 10.7877C14.3493 9.94885 14.9378 9.41192 15.4783 9.41192C16.0471 9.41192 16.6209 9.93851 16.6074 10.7755ZM8.49373 12.1444C7.94513 12.1444 7.36471 11.6173 7.36471 10.7877C7.36471 9.94885 7.95323 9.41192 8.49373 9.41192C9.06038 9.41192 9.63892 9.93712 9.6417 10.7815C9.62517 11.6239 9.05462 12.1444 8.49373 12.1444Z"
-          strokeWidth="1.5"
-        />
-      </svg>
-    ),
-  },
-];
