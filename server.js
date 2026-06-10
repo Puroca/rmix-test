@@ -16,14 +16,13 @@ app.use(
 app.use(express.static("build/client"));
 
 // Pass all other requests to the React Router request handler
-app.all(
-  "*",
+app.use(
   createRequestHandler({
     build: () => import("./build/server/index.js"),
   })
 );
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
